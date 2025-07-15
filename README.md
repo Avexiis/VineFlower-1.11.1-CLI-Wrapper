@@ -3,5 +3,6 @@ This is a simple batch script to easily interact with VineFlower 1.11.1 in comma
 
 # Features
 - Import .JAR files directly, or use extracted class directories
-- Searches Maven Central for required libraries and writes to console & file with info and links to the libraries found
+- Searches Maven Central for required libraries
+- Writes to console & file with info and links to the libraries found
 - Recommends Java version for rebuild of decompiled sources
