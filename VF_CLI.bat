@@ -29,48 +29,52 @@ echo ------------------------------------------------------------
 echo.
 
 set /p IN_PATH=Enter path to .JAR file or classes directory: 
-if "%IN_PATH%"=="" (
+if "!IN_PATH!"=="" (
     echo.
     echo Operation canceled.
     exit /b 0
 )
 
-set "EXT=%IN_PATH:~-4%"
-if /I "%EXT%"==".jar" (
-    for %%I in ("%IN_PATH%") do (
+set "EXT=!IN_PATH:~-4!"
+if /I "!EXT!"==".jar" (
+    for %%I in ("!IN_PATH!") do (
         set "BASENAME=%%~nI"
         set "PARENT=%%~dpI"
     )
-    set "IN_DIR=%PARENT%%BASENAME%_classes"
-    echo Extracting "%IN_PATH%" to "%IN_DIR%"...
-    mkdir "%IN_DIR%" >nul 2>&1
-    powershell -NoProfile -Command "Expand-Archive -LiteralPath '%IN_PATH%' -DestinationPath '%IN_DIR%' -Force"
+    set "IN_DIR=!PARENT!!BASENAME!_classes"
+    echo Extracting "!IN_PATH!" to "!IN_DIR!"...
+    mkdir "!IN_DIR!" >nul 2>&1
+
+    pushd "!IN_DIR!"
+    jar xf "!IN_PATH!"
     if errorlevel 1 (
+        popd
         echo.
-        echo ERROR: Failed to extract JAR.
+        echo ERROR: Failed to extract JAR via jar.exe.
         pause
         exit /b 1
     )
-) else if exist "%IN_PATH%\*" (
-    set "IN_DIR=%IN_PATH%"
+    popd
+) else if exist "!IN_PATH!\*" (
+    set "IN_DIR=!IN_PATH!"
 ) else (
     echo.
-    echo ERROR: "%IN_PATH%" is not a .jar file or an existing directory.
+    echo ERROR: "!IN_PATH!" is not a .jar file or an existing directory.
     pause
     exit /b 1
 )
 
 set /p OUT_DIR=Enter path for output decompiled folder: 
-if "%OUT_DIR%"=="" (
+if "!OUT_DIR!"=="" (
     echo.
     echo Operation canceled.
     exit /b 0
 )
-if not exist "%OUT_DIR%" (
+if not exist "!OUT_DIR!" (
     echo.
     set /p CREATE_OUT=Output folder does not exist. Create it? [Y/N]: 
-    if /i "%CREATE_OUT%"=="Y" (
-        mkdir "%OUT_DIR%"
+    if /I "!CREATE_OUT!"=="Y" (
+        mkdir "!OUT_DIR!"
     ) else (
         echo Aborting.
         pause
@@ -81,14 +85,17 @@ if not exist "%OUT_DIR%" (
 echo.
 echo Running VineFlower decompiler...
 echo =================================
-java -jar "vineflower-1.11.1.jar" "%IN_DIR%" "%OUT_DIR%"
+
+set "JAVA_OPTS=--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
+
+java %JAVA_OPTS% -jar "vineflower-1.11.1.jar" "!IN_DIR!" "!OUT_DIR!"
 
 if errorlevel 1 (
     echo.
     echo ERROR: VineFlower reported a problem.
 ) else (
     echo.
-    echo Success. Decompiled sources are in: "%OUT_DIR%".
+    echo Success. Decompiled sources are in: "!OUT_DIR!".
 )
 echo =================================
 pause
