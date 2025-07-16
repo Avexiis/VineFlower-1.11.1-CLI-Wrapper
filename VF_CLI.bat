@@ -7,15 +7,17 @@ echo ===========================================================================
 echo ^|^| VineFlower 1.11.1 - Decompile Java classes extracted from .JAR files ^| CLI Wrapper by Xeon ^|^|
 echo ================================================================================================
 
+Checking for Java installation...
 where java >nul 2>&1
 if errorlevel 1 (
-  echo ERROR: Java 11+ not found.
+  echo ERROR: Java installation not found.
+  echo Get Java at: https://www.oracle.com/java/technologies/downloads/
   pause
   exit /b 1
 )
 java -version 2>&1
 echo.
-
+echo ================================================================================================
 set "SCRIPT_DIR=%~dp0"
 set "OUT_DIR=%SCRIPT_DIR%out"
 if exist "%OUT_DIR%" (
