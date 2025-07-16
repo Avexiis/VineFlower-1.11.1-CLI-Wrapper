@@ -16,7 +16,6 @@ if errorlevel 1 (
   exit /b 1
 )
 java -version 2>&1
-echo.
 echo ================================================================================================
 set "SCRIPT_DIR=%~dp0"
 set "OUT_DIR=%SCRIPT_DIR%out"
@@ -27,9 +26,10 @@ if exist "%OUT_DIR%" (
 echo Creating output structure under "%OUT_DIR%"
 mkdir "%OUT_DIR%\sources" 2>nul
 mkdir "%OUT_DIR%\classes" 2>nul
+echo ================================================================================================
 echo.
 
-set /p "IN_PATH=Enter path to .JAR or classes dir: "
+set /p "IN_PATH=Enter path to .JAR or classes directory: "
 if "%IN_PATH%"=="" exit /b 0
 
 for %%I in ("%IN_PATH%") do set "PROJECT=%%~nI"
