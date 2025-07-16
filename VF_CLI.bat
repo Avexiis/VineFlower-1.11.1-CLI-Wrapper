@@ -7,7 +7,7 @@ echo ===========================================================================
 echo ^|^| VineFlower 1.11.1 - Decompile Java classes extracted from .JAR files ^| CLI Wrapper by Xeon ^|^|
 echo ================================================================================================
 
-Checking for Java installation...
+echo Checking for Java installation...
 where java >nul 2>&1
 if errorlevel 1 (
   echo ERROR: Java installation not found.
